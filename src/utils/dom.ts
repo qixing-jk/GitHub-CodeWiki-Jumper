@@ -1,7 +1,8 @@
-import { JUMPER_CONTAINER_ID, INJECTION_SELECTOR } from '../constants'
-import { buildDeepWikiUrl, buildCodeWikiUrl } from './url-builder'
+import { JUMPER_CONTAINER_ID, INJECTION_SELECTOR } from '@/constants'
+import { buildDeepWikiUrl, buildCodeWikiUrl, buildZReadUrl } from './url-builder'
 import deepWikiIconUrl from '@/assets/deep-wiki.svg'
 import codeWikiIconUrl from '@/assets/code-wiki.svg'
+import zreadIconUrl from '@/assets/zread.svg'
 
 const createButtonsContainer = (): HTMLDivElement => {
   const container = document.createElement('div')
@@ -44,10 +45,12 @@ export const addButtons = () => {
   const urlx = new URL(window.location.href)
   const deepwikiUrl = buildDeepWikiUrl(urlx.pathname)
   const codewikiUrl = buildCodeWikiUrl(urlx.hostname, urlx.pathname)
+  const zreadUrl = buildZReadUrl(urlx.pathname)
 
   const buttonsContainer = createButtonsContainer()
   const deepwikiLink = createLink(deepwikiUrl, 'DeepWiki', deepWikiIconUrl)
   const codewikiLink = createLink(codewikiUrl, 'CodeWiki', codeWikiIconUrl)
+  const zreadLink = createLink(zreadUrl, 'Zread', zreadIconUrl)
 
   const deepwikiDiv = document.createElement('div')
   deepwikiDiv.classList.add('mt-2')
@@ -57,8 +60,13 @@ export const addButtons = () => {
   codewikiDiv.classList.add('mt-2')
   codewikiDiv.appendChild(codewikiLink)
 
+  const zreadDiv = document.createElement('div')
+  zreadDiv.classList.add('mt-2')
+  zreadDiv.appendChild(zreadLink)
+
   buttonsContainer.appendChild(deepwikiDiv)
   buttonsContainer.appendChild(codewikiDiv)
+  buttonsContainer.appendChild(zreadDiv)
 
   targetElement.insertAdjacentElement('afterend', buttonsContainer)
 }
