@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         github-codewiki-jumper
 // @namespace    https://github.com/qixing-jk/github-codewiki-jumper
-// @version      0.1.0
+// @version      1.0.0
 // @author       qixing-jk
 // @description  One click jump from GitHub to CodeWiki & DeepWiki
 // @downloadURL  https://raw.githubusercontent.com/qixing-jk/github-codewiki-jumper/main/dist/github-codewiki-jumper.user.js
