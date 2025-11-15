@@ -4,6 +4,12 @@
 
 ------
 
+[GitHub](https://github.com/qixing-jk/github-deepwiki-jumper) |
+[Greasyfork](https://greasyfork.org/scripts/555942)
+
+![Greasy Fork 版本](https://img.shields.io/greasyfork/v/555942)
+![Greasy Fork 下载量](https://img.shields.io/greasyfork/dt/555942)
+
 一个 Tampermonkey 用户脚本，在 GitHub 仓库页面添加了 “CodeWiki” 和 “DeepWiki” 按钮，让你一键跳转到对应的 Wiki 页面。
 
 ## 功能

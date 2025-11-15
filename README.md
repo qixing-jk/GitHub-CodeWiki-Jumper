@@ -4,6 +4,12 @@ English | [中文版](README_zh-CN.md)
 
 ------
 
+[GitHub](https://github.com/qixing-jk/github-deepwiki-jumper) |
+[Greasyfork](https://greasyfork.org/scripts/555942)
+
+![Greasy Fork Version](https://img.shields.io/greasyfork/v/555942)
+![Greasy Fork Downloads](https://img.shields.io/greasyfork/dt/555942)
+
 A Tampermonkey userscript that adds "CodeWiki" and "DeepWiki" buttons to GitHub repository pages, allowing for a one-click jump to the corresponding wiki pages.
 
 ## Features
