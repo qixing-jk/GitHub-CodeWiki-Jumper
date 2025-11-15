@@ -1,12 +1,14 @@
 // ==UserScript==
-// @name         github-codewiki-jumper
-// @namespace    https://github.com/qixing-jk/github-codewiki-jumper
-// @version      1.0.0
-// @author       qixing-jk
-// @description  One click jump from GitHub to CodeWiki & DeepWiki
-// @downloadURL  https://raw.githubusercontent.com/qixing-jk/github-codewiki-jumper/main/dist/github-codewiki-jumper.user.js
-// @updateURL    https://raw.githubusercontent.com/qixing-jk/github-codewiki-jumper/main/dist/github-codewiki-jumper.user.js
-// @match        https://github.com/*/*
+// @name               github-codewiki-jumper
+// @name:zh-CN         GitHub 代码百科跳转助手
+// @namespace          https://github.com/qixing-jk/github-codewiki-jumper
+// @version            1.0.0
+// @author             qixing-jk
+// @description        One click jump from GitHub to CodeWiki & DeepWiki
+// @description:zh-CN  一键从 GitHub 跳转到 CodeWiki & DeepWiki
+// @downloadURL        https://raw.githubusercontent.com/qixing-jk/github-codewiki-jumper/main/dist/github-codewiki-jumper.user.js
+// @updateURL          https://raw.githubusercontent.com/qixing-jk/github-codewiki-jumper/main/dist/github-codewiki-jumper.user.js
+// @match              https://github.com/*/*
 // ==/UserScript==
 
 (function () {
