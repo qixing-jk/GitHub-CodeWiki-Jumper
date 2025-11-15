@@ -3,6 +3,22 @@ import { buildDeepWikiUrl, buildCodeWikiUrl, buildZReadUrl } from './url-builder
 import deepWikiIconUrl from '@/assets/deep-wiki.svg'
 import codeWikiIconUrl from '@/assets/code-wiki.svg'
 import zreadIconUrl from '@/assets/zread.svg'
+import zreadIconDarkUrl from '@/assets/zread-dark.svg'
+
+const isDarkMode = (): boolean => {
+  const html = document.documentElement
+  if (html?.getAttribute('data-color-mode') === 'dark') {
+    return true
+  }
+  if (html?.classList.contains('dark') || html?.classList.contains('color-mode-dark')) {
+    return true
+  }
+
+  const media = window.matchMedia?.('(prefers-color-scheme: dark)')
+  return !!media?.matches
+}
+
+const getZreadIcon = () => (isDarkMode() ? zreadIconDarkUrl : zreadIconUrl)
 
 const createButtonsContainer = (): HTMLDivElement => {
   const container = document.createElement('div')
@@ -50,7 +66,7 @@ export const addButtons = () => {
   const buttonsContainer = createButtonsContainer()
   const deepwikiLink = createLink(deepwikiUrl, 'DeepWiki', deepWikiIconUrl)
   const codewikiLink = createLink(codewikiUrl, 'CodeWiki', codeWikiIconUrl)
-  const zreadLink = createLink(zreadUrl, 'Zread', zreadIconUrl)
+  const zreadLink = createLink(zreadUrl, 'Zread', getZreadIcon())
 
   const deepwikiDiv = document.createElement('div')
   deepwikiDiv.classList.add('mt-2')
