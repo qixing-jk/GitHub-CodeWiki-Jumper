@@ -18,12 +18,18 @@ export default defineConfig({
     monkey({
       entry: 'src/main.ts',
       userscript: {
-        name: 'github-codewiki-jumper',
+        name: {
+          '': 'github-codewiki-jumper',
+          'zh-CN': 'GitHub 代码百科跳转助手',
+        },
         namespace: 'https://github.com/qixing-jk/github-codewiki-jumper',
-        match: ['https://github.com/*/*'],
         version: pkg.version,
+        description: {
+          '': 'One click jump from GitHub to CodeWiki & DeepWiki',
+          'zh-CN': '一键从 GitHub 跳转到 CodeWiki & DeepWiki',
+        },
+        match: ['https://github.com/*/*'],
         author: 'qixing-jk',
-        description: 'One click jump from GitHub to CodeWiki & DeepWiki',
         updateURL: `https://raw.githubusercontent.com/qixing-jk/github-codewiki-jumper/main/dist/${pkg.name}.user.js`,
         downloadURL: `https://raw.githubusercontent.com/qixing-jk/github-codewiki-jumper/main/dist/${pkg.name}.user.js`,
       },

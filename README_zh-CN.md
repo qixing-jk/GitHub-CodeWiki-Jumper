@@ -1,4 +1,4 @@
-# GitHub CodeWiki & DeepWiki Jumper
+# GitHub 代码百科跳转助手
 
 [English](README.md) | 中文版
 
