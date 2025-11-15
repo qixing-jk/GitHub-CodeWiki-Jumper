@@ -25,8 +25,8 @@ export default defineConfig({
         namespace: 'https://github.com/qixing-jk/github-codewiki-jumper',
         version: pkg.version,
         description: {
-          '': 'One click jump from GitHub to CodeWiki & DeepWiki',
-          'zh-CN': '一键从 GitHub 跳转到 CodeWiki & DeepWiki',
+          '': 'One click jump from GitHub to CodeWiki, DeepWiki and Zread',
+          'zh-CN': '一键从 GitHub仓库 跳转到 CodeWiki, DeepWiki 和 Zread',
         },
         match: ['https://github.com/*/*'],
         author: 'qixing-jk',

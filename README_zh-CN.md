@@ -10,11 +10,11 @@
 ![Greasy Fork 版本](https://img.shields.io/greasyfork/v/555942)
 ![Greasy Fork 下载量](https://img.shields.io/greasyfork/dt/555942)
 
-一个 Tampermonkey 用户脚本，在 GitHub 仓库页面添加了 “CodeWiki” 和 “DeepWiki” 按钮，让你一键跳转到对应的 Wiki 页面。
+一个用户脚本，通过添加指向流行代码智能平台的直接跳转链接来增强 GitHub 仓库。该脚本无缝集成到 GitHub UI 中，提供对 **CodeWiki**、**DeepWiki** 和 **Zread** 的快速访问，从而简化您的代码探索和研究过程。
 
 ## 功能
 
-- 在 GitHub 仓库页面添加 **CodeWiki** 和 **DeepWiki** 链接
+- 一键从 GitHub仓库 跳转到 [CodeWiki](https://codewiki.google), [DeepWiki](https://deepwiki.com/) 和 [Zread](https://zread.ai/)
 
 ## 安装
 

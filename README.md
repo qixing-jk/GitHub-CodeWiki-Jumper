@@ -1,4 +1,4 @@
-# GitHub CodeWiki & DeepWiki Jumper
+# GitHub CodeWiki, DeepWiki & Zread Jumper
 
 English | [中文版](README_zh-CN.md)
 
@@ -10,11 +10,11 @@ English | [中文版](README_zh-CN.md)
 ![Greasy Fork Version](https://img.shields.io/greasyfork/v/555942)
 ![Greasy Fork Downloads](https://img.shields.io/greasyfork/dt/555942)
 
-A Tampermonkey userscript that adds "CodeWiki" and "DeepWiki" buttons to GitHub repository pages, allowing for a one-click jump to the corresponding wiki pages.
+A userscript that enhances GitHub repositories by adding direct jump links to popular code intelligence platforms. This script integrates seamlessly into the GitHub UI, providing quick access to **CodeWiki**, **DeepWiki**, and **Zread**, streamlining your code exploration and research process.
 
 ## Features
 
-- Add **CodeWiki** and **DeepWiki** links to the GitHub repository page
+- One-click jump from a GitHub repository to [CodeWiki](https://codewiki.google), [DeepWiki](https://deepwiki.com/), and [Zread](https://zread.ai/)
 
 ## Installation
 
