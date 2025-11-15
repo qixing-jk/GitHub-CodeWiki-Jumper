@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/qixing-jk/GitHub-CodeWiki-Jumper/compare/v1.1.0...v1.2.0) (2025-11-15)
+
+
+### Features
+
+* add Zread support for direct navigation ([3c2ac12](https://github.com/qixing-jk/GitHub-CodeWiki-Jumper/commit/3c2ac121e08c449a03c2ef079dbed0f14b210dcf))
+
 ## [1.1.0](https://github.com/qixing-jk/GitHub-CodeWiki-Jumper/compare/v1.0.0...v1.1.0) (2025-11-15)
 
 
