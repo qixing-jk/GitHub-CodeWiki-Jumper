@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: write
+  issues: write
   pull-requests: write
 
 jobs:
@@ -15,10 +16,15 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - uses: google-github-actions/release-please-action@v4
+      - uses: googleapis/release-please-action@v4
         id: release
         with:
+          # this assumes that you have created a personal access token
+          # (PAT) and configured it as a GitHub action secret named
+          # `MY_RELEASE_PLEASE_TOKEN` (this secret name is not important).
           token: ${{ secrets.GITHUB_TOKEN }}
+          # this is a built-in strategy in release-please, see "Action Inputs"
+          # for more options
           release-type: node
       - name: Setup pnpm
         if: ${{ steps.release.outputs.release_created }}
@@ -35,16 +41,22 @@ jobs:
         if: ${{ steps.release.outputs.release_created }}
         run: |
           git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add dist
-          git commit -m "chore: build dist for release ${{ steps.release.outputs.tag_name }}" || echo "No changes to commit"
-      - name: Push changes
-        uses: ad-m/github-push-action@master
+          git config user.email github-actions[bot]@users.noreply.github.com
+          git fetch origin ${{ steps.release.outputs.pr-branch }}
+          git checkout ${{ steps.release.outputs.pr-branch }}
+      - name: Git commit
         if: ${{ steps.release.outputs.release_created }}
+        id: commit
+        run: |
+          git add --all
+          git commit -m "chore: build dist for release ${{ steps.release.outputs.tag_name }}" || echo "No changes"
+        continue-on-error: true
+      - name: Git push
+        uses: ad-m/github-push-action@master
+        if: ${{ steps.commit.outcome == 'success' && steps.release.outputs.release_created }}
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ steps.release.outputs.pr-branch }}
-
+          branch: ${{ github.ref }}
       - name: Upload Release Artifact
         if: ${{ steps.release.outputs.release_created }}
         env:
