@@ -1,5 +1,9 @@
 # GitHub CodeWiki & DeepWiki Jumper
 
+[English](README.md) | 中文版
+
+------
+
 一个 Tampermonkey 用户脚本，在 GitHub 仓库页面添加了 “CodeWiki” 和 “DeepWiki” 按钮，让你一键跳转到对应的 Wiki 页面。
 
 ## 功能

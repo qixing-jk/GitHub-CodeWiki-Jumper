@@ -1,5 +1,9 @@
 # GitHub CodeWiki & DeepWiki Jumper
 
+English | [中文版](README_zh-CN.md)
+
+------
+
 A Tampermonkey userscript that adds "CodeWiki" and "DeepWiki" buttons to GitHub repository pages, allowing for a one-click jump to the corresponding wiki pages.
 
 ## Features
