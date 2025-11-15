@@ -19,7 +19,7 @@ const createLink = (url: string, text: string, iconUrl: string): HTMLAnchorEleme
   link.style.display = 'inline-flex'
   link.style.alignItems = 'center'
   // 图标和文字间距
-  link.style.gap = '4px'
+  link.style.gap = '8px'
 
   const img = document.createElement('img')
   img.src = iconUrl
