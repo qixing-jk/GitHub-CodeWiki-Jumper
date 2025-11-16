@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.1](https://github.com/qixing-jk/GitHub-CodeWiki-Jumper/compare/v1.2.0...v1.2.1) (2025-11-16)
+
+
+### Bug Fixes
+
+* improve icon alignment and consistency ([#9](https://github.com/qixing-jk/GitHub-CodeWiki-Jumper/issues/9)) ([3040a52](https://github.com/qixing-jk/GitHub-CodeWiki-Jumper/commit/3040a5218c85421032bd03f120cc4c4cf6cdcfd2))
+
 ## [1.2.0](https://github.com/qixing-jk/GitHub-CodeWiki-Jumper/compare/v1.1.0...v1.2.0) (2025-11-15)
 
 
