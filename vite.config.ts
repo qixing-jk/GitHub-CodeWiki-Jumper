@@ -28,7 +28,7 @@ export default defineConfig({
           '': 'One click jump from GitHub to CodeWiki, DeepWiki and Zread',
           'zh-CN': '一键从 GitHub仓库 跳转到 CodeWiki, DeepWiki 和 Zread',
         },
-        match: ['https://github.com/*/*'],
+        match: ['*://github.com/*'],
         author: 'qixing-jk',
         updateURL: `https://raw.githubusercontent.com/qixing-jk/github-codewiki-jumper/main/dist/${pkg.name}.user.js`,
         downloadURL: `https://raw.githubusercontent.com/qixing-jk/github-codewiki-jumper/main/dist/${pkg.name}.user.js`,
