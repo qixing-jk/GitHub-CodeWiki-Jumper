@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.2](https://github.com/qixing-jk/GitHub-CodeWiki-Jumper/compare/v1.2.1...v1.2.2) (2025-11-16)
+
+
+### Bug Fixes
+
+* **config:** correct userscript match pattern for GitHub URLs ([b546444](https://github.com/qixing-jk/GitHub-CodeWiki-Jumper/commit/b546444c5ccd758e25482eb23219e08da22c9ff0)), closes [#10](https://github.com/qixing-jk/GitHub-CodeWiki-Jumper/issues/10)
+
 ## [1.2.1](https://github.com/qixing-jk/GitHub-CodeWiki-Jumper/compare/v1.2.0...v1.2.1) (2025-11-16)
 
 
