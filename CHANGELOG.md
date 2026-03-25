@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.4](https://github.com/qixing-jk/GitHub-CodeWiki-Jumper/compare/v1.2.3...v1.2.4) (2026-03-25)
+
+
+### Bug Fixes
+
+* make sidebar button injection resilient to GitHub async navigation ([804a55a](https://github.com/qixing-jk/GitHub-CodeWiki-Jumper/commit/804a55a279b969649c08d6fb719c253df69882d8))
+
 ## [1.2.3](https://github.com/qixing-jk/GitHub-CodeWiki-Jumper/compare/v1.2.2...v1.2.3) (2026-03-04)
 
 
