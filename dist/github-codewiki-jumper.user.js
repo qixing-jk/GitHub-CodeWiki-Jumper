@@ -2,7 +2,7 @@
 // @name               github-codewiki-jumper
 // @name:zh-CN         GitHub 代码百科跳转助手
 // @namespace          https://github.com/qixing-jk/github-codewiki-jumper
-// @version            1.2.3
+// @version            1.2.4
 // @author             qixing-jk
 // @description        One click jump from GitHub to CodeWiki, DeepWiki and Zread
 // @description:zh-CN  一键从 GitHub仓库 跳转到 CodeWiki, DeepWiki 和 Zread
@@ -91,23 +91,44 @@
     buttonsContainer.appendChild(zreadDiv);
     targetElement.insertAdjacentElement("afterend", buttonsContainer);
   };
-  const handleNavigation = () => {
-    setTimeout(addButtons, 500);
+  let injectTimer;
+  const shouldInjectButtons = () => {
+    return !!document.querySelector(INJECTION_SELECTOR) && !document.getElementById(JUMPER_CONTAINER_ID);
+  };
+  const scheduleInjection = (delay = 200) => {
+    if (injectTimer) {
+      clearTimeout(injectTimer);
+    }
+    injectTimer = setTimeout(() => {
+      injectTimer = void 0;
+      if (shouldInjectButtons()) {
+        addButtons();
+      }
+    }, delay);
+  };
+  const observeSidebar = () => {
+    const observer = new MutationObserver(() => {
+      if (shouldInjectButtons()) {
+        scheduleInjection(0);
+      }
+    });
+    observer.observe(document.documentElement, {
+      childList: true,
+      subtree: true
+    });
   };
   const setupNavigationListeners = () => {
-    const originalPushState = history.pushState;
-    history.pushState = function(...args) {
-      originalPushState.apply(this, args);
-      handleNavigation();
+    const handleNavigation = () => {
+      scheduleInjection();
     };
-    const originalReplaceState = history.replaceState;
-    history.replaceState = function(...args) {
-      originalReplaceState.apply(this, args);
-      handleNavigation();
-    };
+    document.addEventListener("turbo:load", handleNavigation);
+    document.addEventListener("turbo:render", handleNavigation);
+    document.addEventListener("pjax:end", handleNavigation);
     window.addEventListener("popstate", handleNavigation);
+    observeSidebar();
+    scheduleInjection(0);
   };
-  addButtons();
   setupNavigationListeners();
+  addButtons();
 
 })();
