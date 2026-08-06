@@ -2,7 +2,7 @@
 // @name               github-codewiki-jumper
 // @name:zh-CN         GitHub 代码百科跳转助手
 // @namespace          https://github.com/qixing-jk/github-codewiki-jumper
-// @version            1.2.5
+// @version            1.2.4
 // @author             qixing-jk
 // @description        One click jump from GitHub to CodeWiki, DeepWiki and Zread
 // @description:zh-CN  一键从 GitHub仓库 跳转到 CodeWiki, DeepWiki 和 Zread
@@ -15,19 +15,7 @@
   'use strict';
 
   const JUMPER_CONTAINER_ID = "jumper-buttons-container";
-  const INJECTION_SELECTOR = '[class*="SidebarSection-module__sidebarSection"].hide-sm.hide-md';
-  const SIDEBAR_SELECTOR = 'div[class*="CodeViewSidebar-module__borderGrid"]';
-  const getRepositoryName = () => {
-    var _a, _b, _c, _d;
-    return ((_b = (_a = document.querySelector('meta[name="current-repo-nwo"]')) == null ? void 0 : _a.getAttribute("content")) == null ? void 0 : _b.trim()) || ((_d = (_c = document.querySelector('meta[name="octolytics-dimension-repository_nwo"]')) == null ? void 0 : _c.getAttribute("content")) == null ? void 0 : _d.trim()) || null;
-  };
-  const buildRepositoryPath = (repositoryName) => {
-    const parts = repositoryName.split("/");
-    if (parts.length !== 2 || parts.some((part) => !part)) {
-      return null;
-    }
-    return `/${parts.map((part) => encodeURIComponent(part)).join("/")}`;
-  };
+  const INJECTION_SELECTOR = ".BorderGrid-cell .hide-sm.hide-md";
   const buildDeepWikiUrl = (pathname) => {
     return `https://deepwiki.com${pathname}`;
   };
@@ -77,38 +65,31 @@
     return link;
   };
   const addButtons = () => {
-    var _a;
-    const repositoryName = getRepositoryName();
-    if (!repositoryName) {
-      return;
-    }
-    const repositoryPath = buildRepositoryPath(repositoryName);
-    if (!repositoryPath) {
-      return;
-    }
     const targetElement = document.querySelector(INJECTION_SELECTOR);
     if (!targetElement || document.getElementById(JUMPER_CONTAINER_ID)) {
       return;
     }
     const urlx = new URL(window.location.href);
+    const deepwikiUrl = buildDeepWikiUrl(urlx.pathname);
+    const codewikiUrl = buildCodeWikiUrl(urlx.hostname, urlx.pathname);
+    const zreadUrl = buildZReadUrl(urlx.pathname);
     const buttonsContainer = createButtonsContainer();
-    for (const link of [
-      createLink(buildDeepWikiUrl(repositoryPath), "DeepWiki", deepWikiIconUrl),
-      createLink(buildCodeWikiUrl(urlx.hostname, repositoryPath), "CodeWiki", codeWikiIconUrl),
-      createLink(buildZReadUrl(repositoryPath), "Zread", getZreadIcon())
-    ]) {
-      const div = document.createElement("div");
-      div.classList.add("mt-2");
-      div.appendChild(link);
-      buttonsContainer.appendChild(div);
-    }
-    const sidebar = document.querySelector(SIDEBAR_SELECTOR);
-    const reportRow = (_a = sidebar == null ? void 0 : sidebar.querySelector('a[href*="/contact/report-content"]')) == null ? void 0 : _a.closest(".mt-2");
-    if (reportRow) {
-      reportRow.insertAdjacentElement("afterend", buttonsContainer);
-      return;
-    }
-    targetElement.appendChild(buttonsContainer);
+    const deepwikiLink = createLink(deepwikiUrl, "DeepWiki", deepWikiIconUrl);
+    const codewikiLink = createLink(codewikiUrl, "CodeWiki", codeWikiIconUrl);
+    const zreadLink = createLink(zreadUrl, "Zread", getZreadIcon());
+    const deepwikiDiv = document.createElement("div");
+    deepwikiDiv.classList.add("mt-2");
+    deepwikiDiv.appendChild(deepwikiLink);
+    const codewikiDiv = document.createElement("div");
+    codewikiDiv.classList.add("mt-2");
+    codewikiDiv.appendChild(codewikiLink);
+    const zreadDiv = document.createElement("div");
+    zreadDiv.classList.add("mt-2");
+    zreadDiv.appendChild(zreadLink);
+    buttonsContainer.appendChild(deepwikiDiv);
+    buttonsContainer.appendChild(codewikiDiv);
+    buttonsContainer.appendChild(zreadDiv);
+    targetElement.insertAdjacentElement("afterend", buttonsContainer);
   };
   let injectTimer;
   const shouldInjectButtons = () => {
