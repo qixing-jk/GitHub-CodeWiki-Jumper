@@ -32,3 +32,8 @@ node_modules/
 .env.production.local
 
 auto-imports.d.ts
+
+# Playwright artifacts
+.playwright-cli/
+playwright-report/
+test-results/
