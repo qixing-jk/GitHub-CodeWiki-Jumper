@@ -1,5 +1,11 @@
-import { JUMPER_CONTAINER_ID, INJECTION_SELECTOR } from '@/constants'
-import { buildDeepWikiUrl, buildCodeWikiUrl, buildZReadUrl } from './url-builder'
+import { JUMPER_CONTAINER_ID, INJECTION_SELECTOR, SIDEBAR_SELECTOR } from '@/constants'
+import {
+  buildDeepWikiUrl,
+  buildCodeWikiUrl,
+  buildZReadUrl,
+  getRepositoryName,
+  buildRepositoryPath,
+} from './url-builder'
 import deepWikiIconUrl from '@/assets/deep-wiki.svg'
 import codeWikiIconUrl from '@/assets/code-wiki.svg'
 import zreadIconUrl from '@/assets/zread.svg'
@@ -52,37 +58,41 @@ const createLink = (url: string, text: string, iconUrl: string): HTMLAnchorEleme
 }
 
 export const addButtons = () => {
-  const targetElement = document.querySelector(INJECTION_SELECTOR)
+  const repositoryName = getRepositoryName()
+  if (!repositoryName) {
+    return
+  }
 
+  const repositoryPath = buildRepositoryPath(repositoryName)
+  if (!repositoryPath) {
+    return
+  }
+
+  const targetElement = document.querySelector(INJECTION_SELECTOR)
   if (!targetElement || document.getElementById(JUMPER_CONTAINER_ID)) {
     return
   }
 
   const urlx = new URL(window.location.href)
-  const deepwikiUrl = buildDeepWikiUrl(urlx.pathname)
-  const codewikiUrl = buildCodeWikiUrl(urlx.hostname, urlx.pathname)
-  const zreadUrl = buildZReadUrl(urlx.pathname)
-
   const buttonsContainer = createButtonsContainer()
-  const deepwikiLink = createLink(deepwikiUrl, 'DeepWiki', deepWikiIconUrl)
-  const codewikiLink = createLink(codewikiUrl, 'CodeWiki', codeWikiIconUrl)
-  const zreadLink = createLink(zreadUrl, 'Zread', getZreadIcon())
 
-  const deepwikiDiv = document.createElement('div')
-  deepwikiDiv.classList.add('mt-2')
-  deepwikiDiv.appendChild(deepwikiLink)
+  for (const link of [
+    createLink(buildDeepWikiUrl(repositoryPath), 'DeepWiki', deepWikiIconUrl),
+    createLink(buildCodeWikiUrl(urlx.hostname, repositoryPath), 'CodeWiki', codeWikiIconUrl),
+    createLink(buildZReadUrl(repositoryPath), 'Zread', getZreadIcon()),
+  ]) {
+    const div = document.createElement('div')
+    div.classList.add('mt-2')
+    div.appendChild(link)
+    buttonsContainer.appendChild(div)
+  }
 
-  const codewikiDiv = document.createElement('div')
-  codewikiDiv.classList.add('mt-2')
-  codewikiDiv.appendChild(codewikiLink)
-
-  const zreadDiv = document.createElement('div')
-  zreadDiv.classList.add('mt-2')
-  zreadDiv.appendChild(zreadLink)
-
-  buttonsContainer.appendChild(deepwikiDiv)
-  buttonsContainer.appendChild(codewikiDiv)
-  buttonsContainer.appendChild(zreadDiv)
-
-  targetElement.insertAdjacentElement('afterend', buttonsContainer)
+  // 优先插入到 About 区块末尾（"Report repository" 行之后），否则追加到 About 区块内
+  const sidebar = document.querySelector(SIDEBAR_SELECTOR)
+  const reportRow = sidebar?.querySelector('a[href*="/contact/report-content"]')?.closest('.mt-2')
+  if (reportRow) {
+    reportRow.insertAdjacentElement('afterend', buttonsContainer)
+    return
+  }
+  targetElement.appendChild(buttonsContainer)
 }
