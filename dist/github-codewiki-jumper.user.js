@@ -2,7 +2,7 @@
 // @name               github-codewiki-jumper
 // @name:zh-CN         GitHub 代码百科跳转助手
 // @namespace          https://github.com/qixing-jk/github-codewiki-jumper
-// @version            1.2.5
+// @version            1.2.6
 // @author             qixing-jk
 // @description        One click jump from GitHub to CodeWiki, DeepWiki and Zread
 // @description:zh-CN  一键从 GitHub仓库 跳转到 CodeWiki, DeepWiki 和 Zread
@@ -86,6 +86,8 @@
   const createButtonsContainer = () => {
     const container = document.createElement("div");
     container.id = JUMPER_CONTAINER_ID;
+    container.setAttribute("translate", "no");
+    container.classList.add("notranslate");
     return container;
   };
   const createLink = (url, text, iconUrl) => {
@@ -95,11 +97,13 @@
     link.classList.add("Link", "Link--muted");
     link.style.display = "inline-flex";
     link.style.alignItems = "center";
+    link.style.whiteSpace = "nowrap";
     link.style.gap = "8px";
     const img = document.createElement("img");
     img.src = iconUrl;
     img.style.width = "16px";
     img.style.height = "16px";
+    img.style.flexShrink = "0";
     img.style.display = "block";
     link.appendChild(img);
     link.appendChild(document.createTextNode(text));
