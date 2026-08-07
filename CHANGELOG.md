@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.5](https://github.com/qixing-jk/GitHub-CodeWiki-Jumper/compare/v1.2.4...v1.2.5) (2026-08-07)
+
+
+### Bug Fixes
+
+* 适配 GitHub 新版侧边栏布局 ([#17](https://github.com/qixing-jk/GitHub-CodeWiki-Jumper/issues/17)) ([e08569c](https://github.com/qixing-jk/GitHub-CodeWiki-Jumper/commit/e08569cebe9cdfac1e6fe982f5cc082364621282))
+
 ## [1.2.4](https://github.com/qixing-jk/GitHub-CodeWiki-Jumper/compare/v1.2.3...v1.2.4) (2026-03-25)
 
 
