@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.6](https://github.com/qixing-jk/GitHub-CodeWiki-Jumper/compare/v1.2.5...v1.2.6) (2026-08-07)
+
+
+### Bug Fixes
+
+* **ui:** protect jumper links from page translation ([#20](https://github.com/qixing-jk/GitHub-CodeWiki-Jumper/issues/20)) ([336c699](https://github.com/qixing-jk/GitHub-CodeWiki-Jumper/commit/336c69933a299cc4c4c800458a5fec895e64590e))
+
 ## [1.2.5](https://github.com/qixing-jk/GitHub-CodeWiki-Jumper/compare/v1.2.4...v1.2.5) (2026-08-07)
 
 
