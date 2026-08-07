@@ -29,6 +29,8 @@ const getZreadIcon = () => (isDarkMode() ? zreadIconDarkUrl : zreadIconUrl)
 const createButtonsContainer = (): HTMLDivElement => {
   const container = document.createElement('div')
   container.id = JUMPER_CONTAINER_ID
+  container.setAttribute('translate', 'no')
+  container.classList.add('notranslate')
   return container
 }
 
@@ -41,6 +43,7 @@ const createLink = (url: string, text: string, iconUrl: string): HTMLAnchorEleme
   // 设置 inline-flex
   link.style.display = 'inline-flex'
   link.style.alignItems = 'center'
+  link.style.whiteSpace = 'nowrap'
   // 图标和文字间距
   link.style.gap = '8px'
 
@@ -48,6 +51,7 @@ const createLink = (url: string, text: string, iconUrl: string): HTMLAnchorEleme
   img.src = iconUrl
   img.style.width = '16px'
   img.style.height = '16px'
+  img.style.flexShrink = '0'
   // 避免 inline 图片带来的基线偏差
   img.style.display = 'block'
 

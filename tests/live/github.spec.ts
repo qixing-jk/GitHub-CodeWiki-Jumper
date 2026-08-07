@@ -21,6 +21,8 @@ test('injects the expected links into a live GitHub repository page', async ({ p
   const container = page.locator('#jumper-buttons-container')
   await expect(container).toBeVisible()
   await expect(container).toHaveCount(1)
+  await expect(container).toHaveAttribute('translate', 'no')
+  await expect(container).toHaveClass(/\bnotranslate\b/)
 
   const expectedLinks = [
     ['DeepWiki', `https://deepwiki.com/${repositoryName}`],
@@ -33,6 +35,8 @@ test('injects the expected links into a live GitHub repository page', async ({ p
     await expect(link).toBeVisible()
     await expect(link).toHaveAttribute('href', href)
     await expect(link).toHaveAttribute('target', '_blank')
+    await expect(link).toHaveCSS('white-space', 'nowrap')
+    await expect(link.locator('img')).toHaveCSS('flex-shrink', '0')
   }
 
   await page.evaluate(() => {
