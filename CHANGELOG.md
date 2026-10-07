@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.7](https://github.com/qixing-jk/GitHub-CodeWiki-Jumper/compare/v1.2.6...v1.2.7) (2026-10-07)
+
+
+### Bug Fixes
+
+* locate About section after GitHub sidebar layout change ([ca12f59](https://github.com/qixing-jk/GitHub-CodeWiki-Jumper/commit/ca12f59a7277595de19c984b0654bbe900ca5180))
+
 ## [1.2.6](https://github.com/qixing-jk/GitHub-CodeWiki-Jumper/compare/v1.2.5...v1.2.6) (2026-08-07)
 
 
