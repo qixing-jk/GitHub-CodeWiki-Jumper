@@ -2,7 +2,7 @@
 // @name               github-codewiki-jumper
 // @name:zh-CN         GitHub 代码百科跳转助手
 // @namespace          https://github.com/qixing-jk/github-codewiki-jumper
-// @version            1.2.6
+// @version            1.2.7
 // @author             qixing-jk
 // @description        One click jump from GitHub to CodeWiki, DeepWiki and Zread
 // @description:zh-CN  一键从 GitHub仓库 跳转到 CodeWiki, DeepWiki 和 Zread
@@ -15,8 +15,8 @@
   'use strict';
 
   const JUMPER_CONTAINER_ID = "jumper-buttons-container";
-  const INJECTION_SELECTOR = '[class*="SidebarSection-module__sidebarSection"].hide-sm.hide-md';
   const SIDEBAR_SELECTOR = 'div[class*="CodeViewSidebar-module__borderGrid"]';
+  const INJECTION_SELECTOR = `${SIDEBAR_SELECTOR} > [class*="SidebarSection-module__sidebarSection"]:first-child`;
   const normalizeRepositoryName = (value) => {
     const parts = value == null ? void 0 : value.trim().split("/").map((part) => part.trim());
     if (!parts || parts.length !== 2 || parts.some((part) => !part)) {
