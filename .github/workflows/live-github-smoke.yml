@@ -37,6 +37,9 @@ jobs:
       - name: Install Chromium
         run: pnpm exec playwright install --with-deps chromium
 
+      - name: Build userscript
+        run: pnpm run build
+
       - name: Test userscript on live GitHub
         run: pnpm run test:live
 
