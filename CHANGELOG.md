@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.8](https://github.com/qixing-jk/GitHub-CodeWiki-Jumper/compare/v1.2.7...v1.2.8) (2026-10-13)
+
+
+### Bug Fixes
+
+* support GitHub sidebar classes without module prefixes ([2a41a8b](https://github.com/qixing-jk/GitHub-CodeWiki-Jumper/commit/2a41a8b9e895594d40ac30b212228ffad411b9cb))
+
 ## [1.2.7](https://github.com/qixing-jk/GitHub-CodeWiki-Jumper/compare/v1.2.6...v1.2.7) (2026-10-07)
 
 
