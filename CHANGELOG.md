@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.9](https://github.com/qixing-jk/GitHub-CodeWiki-Jumper/compare/v1.2.8...v1.2.9) (2026-10-19)
+
+
+### Bug Fixes
+
+* 适配 GitHub 登录态侧边栏类名格式 ([#24](https://github.com/qixing-jk/GitHub-CodeWiki-Jumper/issues/24)) ([445abd4](https://github.com/qixing-jk/GitHub-CodeWiki-Jumper/commit/445abd46466d705a86a4a5c10a7ddee49c7199e4))
+
 ## [1.2.8](https://github.com/qixing-jk/GitHub-CodeWiki-Jumper/compare/v1.2.7...v1.2.8) (2026-10-13)
 
 
