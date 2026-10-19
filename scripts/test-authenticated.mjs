@@ -154,9 +154,12 @@ async function main(options) {
     })
     if (report.results.some((result) => result.status === 'failed')) process.exitCode = 1
   } catch (error) {
-    report.results.push({ name: 'setup', status: 'failed', error: error.message })
+    const message = options.cdp
+      ? error.message.replaceAll(options.cdp, '[CDP endpoint]')
+      : error.message
+    report.results.push({ name: 'setup', status: 'failed', error: message })
     process.exitCode = 1
-    console.error(error.message)
+    console.error(message)
   } finally {
     try {
       if (options.cdp || report.results.length) await saveReport()

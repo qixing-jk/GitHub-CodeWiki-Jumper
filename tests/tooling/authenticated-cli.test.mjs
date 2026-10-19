@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict'
 import { spawn, spawnSync } from 'node:child_process'
 import test from 'node:test'
+import { createServer } from 'node:http'
 import { runInNewContext } from 'node:vm'
 import { chromium } from '@playwright/test'
 import { mkdtemp, readFile, rm } from 'node:fs/promises'
@@ -134,6 +135,60 @@ test('CDP run preserves existing tabs, browser session, and the release bundle',
   } finally {
     await context.close()
     if (dirname(directory) === tmpdir() && basename(directory).startsWith('jumper-cdp-test-')) {
+      await rm(directory, { recursive: true, force: true })
+    }
+  }
+})
+
+test('redacts CDP credentials from connection failures and saved reports', async () => {
+  const directory = await mkdtemp(join(tmpdir(), 'jumper-redaction-test-'))
+  const server = createServer()
+  server.on('upgrade', (_request, socket) => {
+    socket.end('HTTP/1.1 503 Service Unavailable\r\nContent-Length: 0\r\n\r\n')
+  })
+  await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve))
+  try {
+    const endpoint = `ws://127.0.0.1:${server.address().port}/browser/sample-private-token`
+    const result = await new Promise((resolve, reject) => {
+      const child = spawn(process.execPath, [
+        'scripts/test-authenticated.mjs',
+        '--own',
+        'alice/repo',
+        '--cdp',
+        endpoint,
+        '--output',
+        directory,
+      ])
+      let output = ''
+      child.stdout.on('data', (data) => {
+        output += data
+      })
+      child.stderr.on('data', (data) => {
+        output += data
+      })
+      child.on('error', reject)
+      child.on('exit', (status) => resolve({ status, output }))
+    })
+    assert.equal(result.status, 1)
+    assert.ok(
+      !result.output.includes('sample-private-token'),
+      'terminal output must redact the endpoint credential'
+    )
+    assert.match(result.output, /\[CDP endpoint\]/)
+    const savedReport = await readFile(join(directory, 'report.json'), 'utf8')
+    assert.ok(
+      !savedReport.includes('sample-private-token'),
+      'saved report must redact the endpoint credential'
+    )
+    const setup = JSON.parse(savedReport).results.find((result) => result.name === 'setup')
+    assert.equal(setup.status, 'failed')
+    assert.match(setup.error, /\[CDP endpoint\]/)
+  } finally {
+    await new Promise((resolve) => server.close(resolve))
+    if (
+      dirname(directory) === tmpdir() &&
+      basename(directory).startsWith('jumper-redaction-test-')
+    ) {
       await rm(directory, { recursive: true, force: true })
     }
   }

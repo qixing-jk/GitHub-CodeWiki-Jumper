@@ -152,3 +152,40 @@ test('reports a configured empty repository with files as failed', async () => {
     await page.close()
   }
 })
+
+test('records an unavailable repository and continues with the remaining scenarios', async () => {
+  const page = await browser.newPage()
+  try {
+    await page.route('https://github.com/**', (route) => {
+      const repo = new URL(route.request().url()).pathname.slice(1)
+      return route.fulfill({
+        status: repo === 'other/missing' ? 404 : 200,
+        contentType: 'text/html',
+        body: `
+          <meta name="user-login" content="alice">
+          <meta name="octolytics-dimension-repository_nwo" content="${repo}">
+          <style>@media(max-width:767px){.HideWhenNarrow{display:none}}</style>
+          <div class="borderGrid_hash"><section class="sidebarSection_hash HideWhenNarrow"><h2>About</h2></section></div>
+          <p>forked from upstream/repo</p>`,
+      })
+    })
+    const failures = []
+    const report = await runAuthenticatedChecks(page, {
+      account: 'alice',
+      repositories: { own: 'alice/repo', other: 'other/missing', fork: 'alice/fork' },
+      script,
+      onResult: async (result, currentPage) => {
+        if (result.status === 'failed') {
+          failures.push({ name: result.name, url: currentPage.url() })
+          assert.ok((await currentPage.screenshot()).length > 0)
+        }
+      },
+    })
+    assert.equal(report.results.find((result) => result.name === 'own').status, 'passed')
+    assert.match(report.results.find((result) => result.name === 'other').error, /HTTP 404/)
+    assert.equal(report.results.find((result) => result.name === 'fork').status, 'passed')
+    assert.deepEqual(failures, [{ name: 'other', url: 'https://github.com/other/missing' }])
+  } finally {
+    await page.close()
+  }
+})

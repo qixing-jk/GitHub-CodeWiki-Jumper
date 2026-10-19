@@ -122,8 +122,8 @@ export async function runAuthenticatedChecks(
         await skip(name, 'Not configured')
         continue
       }
-      await open(repository)
       await record(name, async () => {
+        await open(repository)
         const details = await assertPlacement(repository, name !== 'other')
         if (name === 'fork')
           await page.getByText('forked from', { exact: false }).waitFor({ state: 'visible' })
