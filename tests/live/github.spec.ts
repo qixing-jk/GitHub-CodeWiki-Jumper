@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test'
 import { readFile } from 'node:fs/promises'
 import { fileURLToPath } from 'node:url'
+import { assertJumperLinks } from '../helpers/jumper.mjs'
 
 const repositoryName = 'qixing-jk/GitHub-CodeWiki-Jumper'
 const repositoryUrl = `https://github.com/${repositoryName}`
@@ -18,30 +19,11 @@ test('injects the expected links into a live GitHub repository page', async ({ p
   // bypassCSP context reproduces that boundary without starting before the DOM.
   await page.addScriptTag({ content: userscript })
 
-  const container = page.locator('#jumper-buttons-container')
-  await expect(container).toBeVisible()
-  await expect(container).toHaveCount(1)
-  await expect(container).toHaveAttribute('translate', 'no')
-  await expect(container).toHaveClass(/\bnotranslate\b/)
-
-  const expectedLinks = [
-    ['DeepWiki', `https://deepwiki.com/${repositoryName}`],
-    ['CodeWiki', `https://codewiki.google/github.com/${repositoryName}`],
-    ['Zread', `https://zread.ai/${repositoryName}`],
-  ] as const
-
-  for (const [name, href] of expectedLinks) {
-    const link = container.getByRole('link', { name })
-    await expect(link).toBeVisible()
-    await expect(link).toHaveAttribute('href', href)
-    await expect(link).toHaveAttribute('target', '_blank')
-    await expect(link).toHaveCSS('white-space', 'nowrap')
-    await expect(link.locator('img')).toHaveCSS('flex-shrink', '0')
-  }
+  await assertJumperLinks(page, repositoryName)
 
   await page.evaluate(() => {
     document.dispatchEvent(new Event('turbo:load'))
     document.dispatchEvent(new Event('turbo:render'))
   })
-  await expect(container).toHaveCount(1)
+  await expect(page.locator('#jumper-buttons-container')).toHaveCount(1)
 })
