@@ -77,6 +77,10 @@ const findInjectionAnchor = (): InjectionAnchor | null => {
 }
 
 export const addButtons = () => {
+  if (document.getElementById(JUMPER_CONTAINER_ID)) {
+    return
+  }
+
   const repositoryName = getRepositoryName()
   if (!repositoryName) {
     return
@@ -84,7 +88,7 @@ export const addButtons = () => {
 
   const repositoryPath = buildRepositoryPath(repositoryName)
   const anchor = findInjectionAnchor()
-  if (!anchor || document.getElementById(JUMPER_CONTAINER_ID)) {
+  if (!anchor) {
     return
   }
 

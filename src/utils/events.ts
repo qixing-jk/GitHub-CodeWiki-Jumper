@@ -1,4 +1,5 @@
 import { addButtons } from './dom'
+import { JUMPER_CONTAINER_ID } from '@/constants'
 
 let injectTimer: ReturnType<typeof setTimeout> | undefined
 
@@ -16,7 +17,11 @@ const scheduleInjection = (delay = 200) => {
 
 // GitHub 是单页应用，切换仓库时侧边栏局部重渲染，需要观察重建后重新注入
 const observeSidebar = () => {
-  const observer = new MutationObserver(() => scheduleInjection(0))
+  const observer = new MutationObserver(() => {
+    if (!document.getElementById(JUMPER_CONTAINER_ID)) {
+      scheduleInjection(0)
+    }
+  })
 
   observer.observe(document.documentElement, {
     childList: true,
