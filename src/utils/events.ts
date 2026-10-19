@@ -1,12 +1,8 @@
-import { JUMPER_CONTAINER_ID, INJECTION_SELECTOR } from '@/constants'
 import { addButtons } from './dom'
 
 let injectTimer: ReturnType<typeof setTimeout> | undefined
 
-const shouldInjectButtons = () => {
-  return !!document.querySelector(INJECTION_SELECTOR) && !document.getElementById(JUMPER_CONTAINER_ID)
-}
-
+// 短时间内可能连续触发多次，用防抖合并；addButtons 会检查是否已注入，重复调用是安全的
 const scheduleInjection = (delay = 200) => {
   if (injectTimer) {
     clearTimeout(injectTimer)
@@ -14,18 +10,13 @@ const scheduleInjection = (delay = 200) => {
 
   injectTimer = setTimeout(() => {
     injectTimer = undefined
-    if (shouldInjectButtons()) {
-      addButtons()
-    }
+    addButtons()
   }, delay)
 }
 
+// GitHub 是单页应用，切换仓库时侧边栏局部重渲染，需要观察重建后重新注入
 const observeSidebar = () => {
-  const observer = new MutationObserver(() => {
-    if (shouldInjectButtons()) {
-      scheduleInjection(0)
-    }
-  })
+  const observer = new MutationObserver(() => scheduleInjection(0))
 
   observer.observe(document.documentElement, {
     childList: true,
@@ -34,15 +25,9 @@ const observeSidebar = () => {
 }
 
 export const setupNavigationListeners = () => {
-  const handleNavigation = () => {
-    scheduleInjection()
-  }
-
-  document.addEventListener('turbo:load', handleNavigation)
-  document.addEventListener('turbo:render', handleNavigation)
-  document.addEventListener('pjax:end', handleNavigation)
-  window.addEventListener('popstate', handleNavigation)
+  document.addEventListener('turbo:load', () => scheduleInjection())
+  document.addEventListener('turbo:render', () => scheduleInjection())
+  window.addEventListener('popstate', () => scheduleInjection())
 
   observeSidebar()
-  scheduleInjection(0)
 }

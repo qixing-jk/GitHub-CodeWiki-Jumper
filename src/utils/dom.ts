@@ -1,4 +1,9 @@
-import { JUMPER_CONTAINER_ID, INJECTION_SELECTOR, SIDEBAR_SELECTOR } from '@/constants'
+import {
+  JUMPER_CONTAINER_ID,
+  INJECTION_SELECTOR,
+  SIDEBAR_SELECTOR,
+  REPORT_LINK_SELECTOR,
+} from '@/constants'
 import {
   buildDeepWikiUrl,
   buildCodeWikiUrl,
@@ -11,18 +16,8 @@ import codeWikiIconUrl from '@/assets/code-wiki.svg'
 import zreadIconUrl from '@/assets/zread.svg'
 import zreadIconDarkUrl from '@/assets/zread-dark.svg'
 
-const isDarkMode = (): boolean => {
-  const html = document.documentElement
-  if (html?.getAttribute('data-color-mode') === 'dark') {
-    return true
-  }
-  if (html?.classList.contains('dark') || html?.classList.contains('color-mode-dark')) {
-    return true
-  }
-
-  const media = window.matchMedia?.('(prefers-color-scheme: dark)')
-  return !!media?.matches
-}
+// GitHub 通过根元素 color-scheme 表达当前主题，深色时计算值为 dark
+const isDarkMode = (): boolean => getComputedStyle(document.documentElement).colorScheme === 'dark'
 
 const getZreadIcon = () => (isDarkMode() ? zreadIconDarkUrl : zreadIconUrl)
 
@@ -40,11 +35,9 @@ const createLink = (url: string, text: string, iconUrl: string): HTMLAnchorEleme
   link.target = '_blank'
   link.classList.add('Link', 'Link--muted')
 
-  // 设置 inline-flex
   link.style.display = 'inline-flex'
   link.style.alignItems = 'center'
   link.style.whiteSpace = 'nowrap'
-  // 图标和文字间距
   link.style.gap = '8px'
 
   const img = document.createElement('img')
@@ -52,13 +45,35 @@ const createLink = (url: string, text: string, iconUrl: string): HTMLAnchorEleme
   img.style.width = '16px'
   img.style.height = '16px'
   img.style.flexShrink = '0'
-  // 避免 inline 图片带来的基线偏差
+  // inline 图片会受文字基线影响产生偏移，改成 block 精确对齐
   img.style.display = 'block'
 
   link.appendChild(img)
   link.appendChild(document.createTextNode(text))
 
   return link
+}
+
+interface InjectionAnchor {
+  target: Element
+  position: InsertPosition
+}
+
+// 别人的仓库都有 Report 行，插到它后面最稳定；自己的仓库 GitHub 不显示 Report 链接，退回插到 About 区块末尾。
+// 查找限定在桌面侧边栏内，避免插到页头或移动端的 About 副本里。
+const findInjectionAnchor = (): InjectionAnchor | null => {
+  const sidebar = document.querySelector(SIDEBAR_SELECTOR)
+  if (!sidebar) {
+    return null
+  }
+
+  const reportRow = sidebar.querySelector(REPORT_LINK_SELECTOR)?.closest('.mt-2')
+  if (reportRow) {
+    return { target: reportRow, position: 'afterend' }
+  }
+
+  const aboutSection = document.querySelector(INJECTION_SELECTOR)
+  return aboutSection ? { target: aboutSection, position: 'beforeend' } : null
 }
 
 export const addButtons = () => {
@@ -68,21 +83,20 @@ export const addButtons = () => {
   }
 
   const repositoryPath = buildRepositoryPath(repositoryName)
-  if (!repositoryPath) {
+  const anchor = findInjectionAnchor()
+  if (!anchor || document.getElementById(JUMPER_CONTAINER_ID)) {
     return
   }
 
-  const targetElement = document.querySelector(INJECTION_SELECTOR)
-  if (!targetElement || document.getElementById(JUMPER_CONTAINER_ID)) {
-    return
-  }
-
-  const urlx = new URL(window.location.href)
   const buttonsContainer = createButtonsContainer()
 
   for (const link of [
     createLink(buildDeepWikiUrl(repositoryPath), 'DeepWiki', deepWikiIconUrl),
-    createLink(buildCodeWikiUrl(urlx.hostname, repositoryPath), 'CodeWiki', codeWikiIconUrl),
+    createLink(
+      buildCodeWikiUrl(window.location.hostname, repositoryPath),
+      'CodeWiki',
+      codeWikiIconUrl
+    ),
     createLink(buildZReadUrl(repositoryPath), 'Zread', getZreadIcon()),
   ]) {
     const div = document.createElement('div')
@@ -91,12 +105,5 @@ export const addButtons = () => {
     buttonsContainer.appendChild(div)
   }
 
-  // 优先插入到 About 区块末尾（"Report repository" 行之后），否则追加到 About 区块内
-  const sidebar = document.querySelector(SIDEBAR_SELECTOR)
-  const reportRow = sidebar?.querySelector('a[href*="/contact/report-content"]')?.closest('.mt-2')
-  if (reportRow) {
-    reportRow.insertAdjacentElement('afterend', buttonsContainer)
-    return
-  }
-  targetElement.appendChild(buttonsContainer)
+  anchor.target.insertAdjacentElement(anchor.position, buttonsContainer)
 }

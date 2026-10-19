@@ -11,49 +11,18 @@ const normalizeRepositoryName = (value: string | null | undefined): string | nul
   return parts.join('/')
 }
 
-const getRepositoryNameFromPath = (): string | null => {
-  const [owner, repository] = window.location.pathname.split('/').filter(Boolean)
-  if (!owner || !repository) {
-    return null
-  }
-
-  try {
-    return normalizeRepositoryName(`${decodeURIComponent(owner)}/${decodeURIComponent(repository)}`)
-  } catch {
-    return null
-  }
-}
-
-// 优先使用 GitHub 的语义元数据，缺失或无效时再回退到 URL 路径。
+// 仓库页都带有这个 meta 标签，从 URL 解析反而要处理编码和非法路径等边界情况
 export const getRepositoryName = (): string | null => {
-  const candidates = [
-    document.querySelector('meta[name="current-repo-nwo"]')?.getAttribute('content'),
+  return normalizeRepositoryName(
     document
       .querySelector('meta[name="octolytics-dimension-repository_nwo"]')
-      ?.getAttribute('content'),
-    getRepositoryNameFromPath(),
-  ]
-
-  for (const candidate of candidates) {
-    const repositoryName = normalizeRepositoryName(candidate)
-    if (repositoryName) {
-      return repositoryName
-    }
-  }
-
-  return null
+      ?.getAttribute('content')
+  )
 }
 
-export const buildRepositoryPath = (repositoryName: string): string | null => {
-  const normalizedRepositoryName = normalizeRepositoryName(repositoryName)
-  if (!normalizedRepositoryName) {
-    return null
-  }
-
-  return `/${normalizedRepositoryName
-    .split('/')
-    .map((part) => encodeURIComponent(part))
-    .join('/')}`
+// 入参已由 getRepositoryName 保证 owner/repo 格式
+export const buildRepositoryPath = (repositoryName: string): string => {
+  return `/${repositoryName.split('/').map(encodeURIComponent).join('/')}`
 }
 
 export const buildDeepWikiUrl = (pathname: string): string => {

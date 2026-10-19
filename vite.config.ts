@@ -1,6 +1,5 @@
 import { defineConfig } from 'vite'
-import monkey, { util } from 'vite-plugin-monkey'
-import AutoImport from 'unplugin-auto-import/vite'
+import monkey from 'vite-plugin-monkey'
 import pkg from './package.json'
 import { fileURLToPath, URL } from 'node:url'
 
@@ -12,9 +11,6 @@ export default defineConfig({
     },
   },
   plugins: [
-    AutoImport({
-      imports: [util.unimportPreset],
-    }),
     monkey({
       entry: 'src/main.ts',
       userscript: {
