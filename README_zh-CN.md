@@ -2,7 +2,7 @@
 
 [English](README.md) | 中文版
 
-------
+---
 
 [GitHub](https://github.com/qixing-jk/github-deepwiki-jumper) |
 [Greasyfork](https://greasyfork.org/scripts/555942)
@@ -31,3 +31,25 @@
 ## 构建
 
 - `pnpm run build`: 构建用于生产环境的用户脚本。
+
+## 本地登录态验收
+
+可使用自行选择并已登录的浏览器，通过 CDP 或 Playwright extension 会话验收。不依赖本地 Agent skill，也不管理浏览器启动、配置目录或登录。
+
+CDP 直接传入浏览器的调试地址：
+
+```sh
+pnpm test:authenticated --own YOUR_LOGIN/nonempty-repo --cdp http://127.0.0.1:YOUR_PORT
+```
+
+extension 使用 [Playwright CLI](https://github.com/microsoft/playwright-cli) 已连接的会话。先生成验收文件，再执行终端打印的 `run-code --filename` 命令，将 `YOUR_SESSION` 替换为你的会话名：
+
+```sh
+pnpm test:authenticated --own YOUR_LOGIN/nonempty-repo --extension-script
+```
+
+两种方式执行相同的检查，只创建和关闭验收标签页，保留原浏览器及已有标签页。请确认选中了预期浏览器，并停用已安装的同名用户脚本。验收会核对 GitHub 登录账号，默认为 `--own` 的所有者，也可用 `--account LOGIN` 指定。
+
+默认检查自己的仓库、他人的 `microsoft/playwright`、About 注入位置、三条链接、文件页往返、前进后退和窄屏状态。`--own` 请选择有文件的仓库；可用 `--other OWNER/REPO` 替换他人仓库，用 `--fork`、`--empty`、`--private` 指定自己拥有的对应仓库。未提供或无法覆盖的场景明确标为 **skipped**，不算通过。API 返回 `size: 0` 不代表仓库没有文件。
+
+命令会检查 TypeScript，并将当前源码构建到临时目录，保留 release bundle。CDP 模式保存 `report.json`，失败时退出码为 1；extension 模式由 Playwright CLI 输出结果 JSON，请检查每项的 `status`。两种模式都会尝试为失败场景保存截图，可用 `--output PATH` 指定输出目录。私有仓库的报告和截图请留在本地。`pnpm test:tooling` 可在无需登录的模拟页面上验证验收入口，登录态验收不加入 CI。

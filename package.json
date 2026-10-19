@@ -9,6 +9,8 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "test:live": "playwright test",
+    "test:authenticated": "node scripts/test-authenticated.mjs",
+    "test:tooling": "node --test tests/tooling/authenticated-checks.test.mjs tests/tooling/authenticated-cli.test.mjs",
     "prettier": "prettier --write ."
   },
   "devDependencies": {
