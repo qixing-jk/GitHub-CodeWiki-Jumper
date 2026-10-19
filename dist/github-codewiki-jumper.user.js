@@ -2,7 +2,7 @@
 // @name               github-codewiki-jumper
 // @name:zh-CN         GitHub 代码百科跳转助手
 // @namespace          https://github.com/qixing-jk/github-codewiki-jumper
-// @version            1.2.8
+// @version            1.2.9
 // @author             qixing-jk
 // @description        One click jump from GitHub to CodeWiki, DeepWiki and Zread
 // @description:zh-CN  一键从 GitHub仓库 跳转到 CodeWiki, DeepWiki 和 Zread
@@ -15,8 +15,9 @@
   'use strict';
 
   const JUMPER_CONTAINER_ID = "jumper-buttons-container";
-  const SIDEBAR_SELECTOR = 'div[class*="borderGrid__"]';
-  const INJECTION_SELECTOR = `${SIDEBAR_SELECTOR} > [class*="sidebarSection__"]:first-child`;
+  const SIDEBAR_SELECTOR = 'div[class*="borderGrid"]';
+  const INJECTION_SELECTOR = `${SIDEBAR_SELECTOR} > [class*="sidebarSection"]:first-child`;
+  const REPORT_LINK_SELECTOR = 'a[href*="/contact/report-content"]';
   const normalizeRepositoryName = (value) => {
     const parts = value == null ? void 0 : value.trim().split("/").map((part) => part.trim());
     if (!parts || parts.length !== 2 || parts.some((part) => !part)) {
@@ -24,38 +25,14 @@
     }
     return parts.join("/");
   };
-  const getRepositoryNameFromPath = () => {
-    const [owner, repository] = window.location.pathname.split("/").filter(Boolean);
-    if (!owner || !repository) {
-      return null;
-    }
-    try {
-      return normalizeRepositoryName(`${decodeURIComponent(owner)}/${decodeURIComponent(repository)}`);
-    } catch {
-      return null;
-    }
-  };
   const getRepositoryName = () => {
-    var _a, _b;
-    const candidates = [
-      (_a = document.querySelector('meta[name="current-repo-nwo"]')) == null ? void 0 : _a.getAttribute("content"),
-      (_b = document.querySelector('meta[name="octolytics-dimension-repository_nwo"]')) == null ? void 0 : _b.getAttribute("content"),
-      getRepositoryNameFromPath()
-    ];
-    for (const candidate of candidates) {
-      const repositoryName = normalizeRepositoryName(candidate);
-      if (repositoryName) {
-        return repositoryName;
-      }
-    }
-    return null;
+    var _a;
+    return normalizeRepositoryName(
+      (_a = document.querySelector('meta[name="octolytics-dimension-repository_nwo"]')) == null ? void 0 : _a.getAttribute("content")
+    );
   };
   const buildRepositoryPath = (repositoryName) => {
-    const normalizedRepositoryName = normalizeRepositoryName(repositoryName);
-    if (!normalizedRepositoryName) {
-      return null;
-    }
-    return `/${normalizedRepositoryName.split("/").map((part) => encodeURIComponent(part)).join("/")}`;
+    return `/${repositoryName.split("/").map(encodeURIComponent).join("/")}`;
   };
   const buildDeepWikiUrl = (pathname) => {
     return `https://deepwiki.com${pathname}`;
@@ -70,18 +47,7 @@
   const codeWikiIconUrl = "data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20fill='none'%20viewBox='-20%20-20%20320%20320'%3e%3cpath%20fill='%23007af4'%20d='M119.166%204.013a56.1%2056.1%200%200%201%2041.668%200l113.289%2045.316c7.836%203.135%207.836%2014.228%200%2017.363L206.34%2093.805c-4.694%201.877-4.694%208.521%200%2010.399l67.782%2027.114c7.837%203.134%207.836%2014.227%200%2017.362l-67.781%2027.113c-4.694%201.877-4.694%208.522%200%2010.399l67.781%2027.113c7.837%203.134%207.836%2014.228%200%2017.362l-113.289%2045.317a56.1%2056.1%200%200%201-41.667%200L5.877%20230.667c-7.836-3.134-7.836-14.227%200-17.362l67.78-27.113c4.695-1.877%204.695-8.522%200-10.399L5.878%20148.68c-7.836-3.135-7.836-14.228%200-17.362l67.782-27.114c4.694-1.878%204.694-8.522%200-10.4L5.879%2066.693c-7.837-3.135-7.837-14.228%200-17.363z'/%3e%3cpath%20fill='url(%23a)'%20d='M119.166%204.013a56.1%2056.1%200%200%201%2041.668%200l113.289%2045.316c7.836%203.135%207.836%2014.228%200%2017.363L206.34%2093.805c-4.694%201.877-4.694%208.521%200%2010.399l67.782%2027.114c7.837%203.134%207.836%2014.227%200%2017.362l-67.781%2027.113c-4.694%201.877-4.694%208.522%200%2010.399l67.781%2027.113c7.837%203.134%207.836%2014.228%200%2017.362l-113.289%2045.317a56.1%2056.1%200%200%201-41.667%200L5.877%20230.667c-7.836-3.134-7.836-14.227%200-17.362l67.78-27.113c4.695-1.877%204.695-8.522%200-10.399L5.878%20148.68c-7.836-3.135-7.836-14.228%200-17.362l67.782-27.114c4.694-1.878%204.694-8.522%200-10.4L5.879%2066.693c-7.837-3.135-7.837-14.228%200-17.363z'/%3e%3cpath%20fill='url(%23b)'%20d='M119.166%204.013a56.1%2056.1%200%200%201%2041.668%200l113.289%2045.316c7.836%203.135%207.836%2014.228%200%2017.363L206.34%2093.805c-4.694%201.877-4.694%208.521%200%2010.399l67.782%2027.114c7.837%203.134%207.836%2014.227%200%2017.362l-67.781%2027.113c-4.694%201.877-4.694%208.522%200%2010.399l67.781%2027.113c7.837%203.134%207.836%2014.228%200%2017.362l-113.289%2045.317a56.1%2056.1%200%200%201-41.667%200L5.877%20230.667c-7.836-3.134-7.836-14.227%200-17.362l67.78-27.113c4.695-1.877%204.695-8.522%200-10.399L5.878%20148.68c-7.836-3.135-7.836-14.228%200-17.362l67.782-27.114c4.694-1.878%204.694-8.522%200-10.4L5.879%2066.693c-7.837-3.135-7.837-14.228%200-17.363z'/%3e%3cpath%20fill='url(%23c)'%20d='M119.167%204.012a56.1%2056.1%200%200%201%2041.667%200L274.123%2049.33c7.836%203.134%207.836%2014.226%200%2017.36L206.34%2093.806c-4.694%201.877-4.694%208.521%200%2010.399l67.782%2027.114c7.836%203.134%207.836%2014.228%200%2017.362l-67.781%2027.113c-4.693%201.878-4.693%208.522%200%2010.399l67.781%2027.113c7.836%203.135%207.836%2014.228%200%2017.362l-113.288%2045.317a56.1%2056.1%200%200%201-41.668%200L5.877%20230.667c-7.836-3.134-7.836-14.227%200-17.362l67.78-27.113c4.694-1.877%204.694-8.521%200-10.399L5.877%20148.68c-7.836-3.134-7.836-14.227%200-17.362l67.783-27.114c4.693-1.878%204.693-8.522%200-10.4L5.878%2066.692c-7.836-3.135-7.836-14.227%200-17.361z'/%3e%3cdefs%3e%3clinearGradient%20id='a'%20x1='82.447'%20x2='127.557'%20y1='259.773'%20y2='161.773'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20offset='.206'%20stop-color='%2308b962'/%3e%3cstop%20offset='.987'%20stop-color='%2308b962'%20stop-opacity='0'/%3e%3c/linearGradient%3e%3clinearGradient%20id='b'%20x1='99.558'%20x2='150.891'%20y1='43.553'%20y2='139.996'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23f94543'/%3e%3cstop%20offset='1'%20stop-color='%23f94543'%20stop-opacity='0'/%3e%3c/linearGradient%3e%3cradialGradient%20id='c'%20cx='0'%20cy='0'%20r='1'%20gradientTransform='matrix(438.114%200%200%20438.11%2011.9%20139.972)'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23fabc12'/%3e%3cstop%20offset='.423'%20stop-color='%23fabc12'%20stop-opacity='0'/%3e%3c/radialGradient%3e%3c/defs%3e%3c/svg%3e";
   const zreadIconUrl = "data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20aria-hidden='true'%20viewBox='0%200%2032%2032'%20version='1.1'%20width='24'%20height='24'%20data-view-component='true'%3e%3cpath%20d='M9.91922%203.2002H4.47922C3.77229%203.2002%203.19922%203.77327%203.19922%204.4802V9.9202C3.19922%2010.6271%203.77229%2011.2002%204.47922%2011.2002H9.91922C10.6261%2011.2002%2011.1992%2010.6271%2011.1992%209.9202V4.4802C11.1992%203.77327%2010.6261%203.2002%209.91922%203.2002Z'%20fill='%23000000'%3e%3c/path%3e%3cpath%20d='M9.91922%2020.7998H4.47922C3.77229%2020.7998%203.19922%2021.3729%203.19922%2022.0798V27.5198C3.19922%2028.2267%203.77229%2028.7998%204.47922%2028.7998H9.91922C10.6261%2028.7998%2011.1992%2028.2267%2011.1992%2027.5198V22.0798C11.1992%2021.3729%2010.6261%2020.7998%209.91922%2020.7998Z'%20fill='%23000000'%3e%3c/path%3e%3cpath%20d='M27.5208%203.2002H22.0808C21.3739%203.2002%2020.8008%203.77327%2020.8008%204.4802V9.9202C20.8008%2010.6271%2021.3739%2011.2002%2022.0808%2011.2002H27.5208C28.2277%2011.2002%2028.8008%2010.6271%2028.8008%209.9202V4.4802C28.8008%203.77327%2028.2277%203.2002%2027.5208%203.2002Z'%20fill='%23000000'%3e%3c/path%3e%3cpath%20d='M8%2024L24%208L8%2024Z'%20fill='%23000000'%3e%3c/path%3e%3cpath%20d='M8%2024L24%208'%20stroke='%23000000'%20stroke-width='2'%20stroke-linecap='round'%3e%3c/path%3e%3c/svg%3e";
   const zreadIconDarkUrl = "data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20aria-hidden='true'%20viewBox='0%200%2032%2032'%20version='1.1'%20width='24'%20height='24'%20data-view-component='true'%3e%3cpath%20d='M9.91922%203.2002H4.47922C3.77229%203.2002%203.19922%203.77327%203.19922%204.4802V9.9202C3.19922%2010.6271%203.77229%2011.2002%204.47922%2011.2002H9.91922C10.6261%2011.2002%2011.1992%2010.6271%2011.1992%209.9202V4.4802C11.1992%203.77327%2010.6261%203.2002%209.91922%203.2002Z'%20fill='%23b8b8b8'%3e%3c/path%3e%3cpath%20d='M9.91922%2020.7998H4.47922C3.77229%2020.7998%203.19922%2021.3729%203.19922%2022.0798V27.5198C3.19922%2028.2267%203.77229%2028.7998%204.47922%2028.7998H9.91922C10.6261%2028.7998%2011.1992%2028.2267%2011.1992%2027.5198V22.0798C11.1992%2021.3729%2010.6261%2020.7998%209.91922%2020.7998Z'%20fill='%23b8b8b8'%3e%3c/path%3e%3cpath%20d='M27.5208%203.2002H22.0808C21.3739%203.2002%2020.8008%203.77327%2020.8008%204.4802V9.9202C20.8008%2010.6271%2021.3739%2011.2002%2022.0808%2011.2002H27.5208C28.2277%2011.2002%2028.8008%2010.6271%2028.8008%209.9202V4.4802C28.8008%203.77327%2028.2277%203.2002%2027.5208%203.2002Z'%20fill='%23b8b8b8'%3e%3c/path%3e%3cpath%20d='M8%2024L24%208L8%2024Z'%20fill='%23b8b8b8'%3e%3c/path%3e%3cpath%20d='M8%2024L24%208'%20stroke='%23b8b8b8'%20stroke-width='2'%20stroke-linecap='round'%3e%3c/path%3e%3c/svg%3e";
-  const isDarkMode = () => {
-    var _a;
-    const html = document.documentElement;
-    if ((html == null ? void 0 : html.getAttribute("data-color-mode")) === "dark") {
-      return true;
-    }
-    if ((html == null ? void 0 : html.classList.contains("dark")) || (html == null ? void 0 : html.classList.contains("color-mode-dark"))) {
-      return true;
-    }
-    const media = (_a = window.matchMedia) == null ? void 0 : _a.call(window, "(prefers-color-scheme: dark)");
-    return !!(media == null ? void 0 : media.matches);
-  };
+  const isDarkMode = () => getComputedStyle(document.documentElement).colorScheme === "dark";
   const getZreadIcon = () => isDarkMode() ? zreadIconDarkUrl : zreadIconUrl;
   const createButtonsContainer = () => {
     const container = document.createElement("div");
@@ -109,25 +75,40 @@
     link.appendChild(document.createTextNode(text));
     return link;
   };
-  const addButtons = () => {
+  const findInjectionAnchor = () => {
     var _a;
+    const sidebar = document.querySelector(SIDEBAR_SELECTOR);
+    if (!sidebar) {
+      return null;
+    }
+    const reportRow = (_a = sidebar.querySelector(REPORT_LINK_SELECTOR)) == null ? void 0 : _a.closest(".mt-2");
+    if (reportRow) {
+      return { target: reportRow, position: "afterend" };
+    }
+    const aboutSection = document.querySelector(INJECTION_SELECTOR);
+    return aboutSection ? { target: aboutSection, position: "beforeend" } : null;
+  };
+  const addButtons = () => {
+    if (document.getElementById(JUMPER_CONTAINER_ID)) {
+      return;
+    }
     const repositoryName = getRepositoryName();
     if (!repositoryName) {
       return;
     }
     const repositoryPath = buildRepositoryPath(repositoryName);
-    if (!repositoryPath) {
+    const anchor = findInjectionAnchor();
+    if (!anchor) {
       return;
     }
-    const targetElement = document.querySelector(INJECTION_SELECTOR);
-    if (!targetElement || document.getElementById(JUMPER_CONTAINER_ID)) {
-      return;
-    }
-    const urlx = new URL(window.location.href);
     const buttonsContainer = createButtonsContainer();
     for (const link of [
       createLink(buildDeepWikiUrl(repositoryPath), "DeepWiki", deepWikiIconUrl),
-      createLink(buildCodeWikiUrl(urlx.hostname, repositoryPath), "CodeWiki", codeWikiIconUrl),
+      createLink(
+        buildCodeWikiUrl(window.location.hostname, repositoryPath),
+        "CodeWiki",
+        codeWikiIconUrl
+      ),
       createLink(buildZReadUrl(repositoryPath), "Zread", getZreadIcon())
     ]) {
       const div = document.createElement("div");
@@ -135,32 +116,21 @@
       div.appendChild(link);
       buttonsContainer.appendChild(div);
     }
-    const sidebar = document.querySelector(SIDEBAR_SELECTOR);
-    const reportRow = (_a = sidebar == null ? void 0 : sidebar.querySelector('a[href*="/contact/report-content"]')) == null ? void 0 : _a.closest(".mt-2");
-    if (reportRow) {
-      reportRow.insertAdjacentElement("afterend", buttonsContainer);
-      return;
-    }
-    targetElement.appendChild(buttonsContainer);
+    anchor.target.insertAdjacentElement(anchor.position, buttonsContainer);
   };
   let injectTimer;
-  const shouldInjectButtons = () => {
-    return !!document.querySelector(INJECTION_SELECTOR) && !document.getElementById(JUMPER_CONTAINER_ID);
-  };
   const scheduleInjection = (delay = 200) => {
     if (injectTimer) {
       clearTimeout(injectTimer);
     }
     injectTimer = setTimeout(() => {
       injectTimer = void 0;
-      if (shouldInjectButtons()) {
-        addButtons();
-      }
+      addButtons();
     }, delay);
   };
   const observeSidebar = () => {
     const observer = new MutationObserver(() => {
-      if (shouldInjectButtons()) {
+      if (!document.getElementById(JUMPER_CONTAINER_ID)) {
         scheduleInjection(0);
       }
     });
@@ -170,15 +140,10 @@
     });
   };
   const setupNavigationListeners = () => {
-    const handleNavigation = () => {
-      scheduleInjection();
-    };
-    document.addEventListener("turbo:load", handleNavigation);
-    document.addEventListener("turbo:render", handleNavigation);
-    document.addEventListener("pjax:end", handleNavigation);
-    window.addEventListener("popstate", handleNavigation);
+    document.addEventListener("turbo:load", () => scheduleInjection());
+    document.addEventListener("turbo:render", () => scheduleInjection());
+    window.addEventListener("popstate", () => scheduleInjection());
     observeSidebar();
-    scheduleInjection(0);
   };
   setupNavigationListeners();
   addButtons();
